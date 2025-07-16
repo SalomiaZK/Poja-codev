@@ -10,10 +10,12 @@ import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 public class ObjectMapperTest extends FacadeIT {
   @Autowired ObjectMapper injectedBean;
+  @Autowired EnvController subject;
   ObjectMapper newInstance = new ObjectMapper();
 
   SomeClassWithDatetimeField someClassWithDatetimeField =
@@ -35,11 +37,11 @@ public class ObjectMapperTest extends FacadeIT {
                 someClassWithDatetimeField.toJsonString(), SomeClassWithDatetimeField.class));
   }
 
-  EnvController subject = new EnvController();
+  @Value("${SECRET_KEY}")
+  private String expected;
 
   @Test
   void preprod_env_test() {
-    String expected = System.getenv("SECRET_KEY");
     String actual = subject.preprodEnv();
     log.info("******** Running Env Test ******* ");
     assertEquals(expected, actual);
