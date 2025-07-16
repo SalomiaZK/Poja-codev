@@ -45,17 +45,9 @@ jobs:
 
 
         run: |
-
-
           export SECRET_KEY=$PROD_SECRET_KEY
-
-
-          ./gradlew test -Dspring.profiles.active=preprod
-
       - run: chmod +x gradlew
-
       - run: chmod +x .shell/publish_gen_to_maven_local.sh
-
       - run: ./gradlew test
 
 
