@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class EnvController {
-    @GetMapping("/preprod-env")
-    public String preprodEnv() {
-        return System.getenv("SECRET_KEY");
-    }
+  @GetMapping("/preprod-env")
+  public String preprodEnv() {
+    return System.getenv("SECRET_KEY");
+  }
 }
