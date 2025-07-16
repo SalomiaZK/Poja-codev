@@ -44,10 +44,4 @@ public class ObjectMapperTest extends FacadeIT {
     log.info("******** Running Env Test ******* ");
     assertEquals(expected, actual);
   }
-
-  @Test
-  void failing_test() {
-    log.info(" **************SECRET KEY HERE " + System.getenv("SECRET_KEY"));
-    assertEquals(6, 1 + 1);
-  }
 }
