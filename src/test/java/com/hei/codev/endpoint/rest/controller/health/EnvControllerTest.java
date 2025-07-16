@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 class EnvControllerTest extends FacadeIT {
-  @Autowired
-  EnvController subject ;
+  @Autowired EnvController subject;
 
   @Value("${SECRET_KEY}")
   private String expected;
