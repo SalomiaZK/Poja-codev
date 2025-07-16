@@ -17,6 +17,8 @@ public class FacadeIT {
   @SneakyThrows
   @DynamicPropertySource
   static void configureProperties(DynamicPropertyRegistry registry) {
+    // Une valeur factice pour les tests
+    registry.add("SECRET_KEY", () -> "dummy-secret-for-test");
 
     new BucketConf().configureProperties(registry);
     new EmailConf().configureProperties(registry);
