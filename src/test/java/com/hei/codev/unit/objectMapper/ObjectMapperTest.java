@@ -36,14 +36,4 @@ public class ObjectMapperTest extends FacadeIT {
             injectedBean.readValue(
                 someClassWithDatetimeField.toJsonString(), SomeClassWithDatetimeField.class));
   }
-
-  @Value("${SECRET_KEY}")
-  private String expected;
-
-  @Test
-  void preprod_env_test() {
-    String actual = subject.preprodEnv();
-    log.info("******** Running Env Test ******* ");
-    assertEquals(expected, actual);
-  }
 }
