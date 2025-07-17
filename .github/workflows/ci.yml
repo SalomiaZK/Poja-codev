@@ -25,27 +25,16 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
 
-      PROD_SECRET_KEY: ${{ secrets.SECRET_KEY_PROD }}
     steps:
 
       - uses: actions/checkout@v4.1.6
-
-
-
       - uses: actions/setup-java@v4.2.1
 
         with:
-
           java-version: '21'
-
           distribution: 'corretto'
 
 
-      - name: Test PROD
-
-
-        run: |
-          export SECRET_KEY=$PROD_SECRET_KEY
       - run: chmod +x gradlew
       - run: chmod +x .shell/publish_gen_to_maven_local.sh
       - run: ./gradlew test
