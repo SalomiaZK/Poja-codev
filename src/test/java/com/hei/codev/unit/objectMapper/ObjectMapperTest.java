@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.hei.codev.conf.FacadeIT;
-import com.hei.codev.endpoint.EnvController;
+import com.hei.codev.endpoint.EnvControllerhe;
 import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Slf4j
 public class ObjectMapperTest extends FacadeIT {
   @Autowired ObjectMapper injectedBean;
-  @Autowired EnvController subject;
-
+  @Autowired EnvControllerhe subject;
   ObjectMapper newInstance = new ObjectMapper();
 
   SomeClassWithDatetimeField someClassWithDatetimeField =

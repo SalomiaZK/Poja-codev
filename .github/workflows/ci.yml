@@ -21,6 +21,7 @@ jobs:
     env:
 
       AWS_REGION: eu-west-3
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
@@ -49,6 +50,7 @@ jobs:
       - run: chmod +x gradlew
       - run: chmod +x .shell/publish_gen_to_maven_local.sh
       - run: ./gradlew test
+
 
 
 
