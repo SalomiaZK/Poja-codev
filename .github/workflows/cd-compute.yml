@@ -28,6 +28,7 @@ jobs:
 
     env:
       AWS_REGION: eu-west-3
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - uses: actions/checkout@v4.1.6
@@ -85,7 +86,9 @@ jobs:
           curl --fail -X GET -o template.yml "$(echo $response | jq -r '.build_template_file_uri')"
 
       - name: Build project
-        run: sam build
+        run: |
+          ./gradlew test -Dspring.application.json='{"SECRET_KEY":"'$SECRET_KEY'"}'
+          sam build
 
       - name: Prepare Poja deployment
         run: |
