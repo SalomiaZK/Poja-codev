@@ -25,7 +25,10 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
-
+    environment: ${{ github.event_name == 'pull_request' && github.base_ref == 'prod' && 'prod'
+      || github.event_name=='pull_request' && github.base_ref == 'preprod' && 'preprod'
+      || github.ref == 'refs/heads/prod' && 'prod'
+      || github.ref == 'refs/heads/preprod' && 'preprod'}}
     env:
       AWS_REGION: eu-west-3
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
