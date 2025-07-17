@@ -10,7 +10,7 @@ public class EnvController {
   @Value("${SECRET_KEY}")
   private String secretKey;
 
-  @GetMapping("/preprod-env")
+  @GetMapping("/env")
   public String preprodEnv() {
     return secretKey;
   }

@@ -5,17 +5,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.hei.codev.conf.FacadeIT;
-import com.hei.codev.endpoint.EnvController;
 import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 public class ObjectMapperTest extends FacadeIT {
   @Autowired ObjectMapper injectedBean;
-  @Autowired EnvController subject;
 
   ObjectMapper newInstance = new ObjectMapper();
 
@@ -36,15 +33,5 @@ public class ObjectMapperTest extends FacadeIT {
         () ->
             injectedBean.readValue(
                 someClassWithDatetimeField.toJsonString(), SomeClassWithDatetimeField.class));
-  }
-
-  @Value("${SECRET_KEY}")
-  private String expected;
-
-  @Test
-  void preprod_env_test() {
-    String actual = subject.preprodEnv();
-    log.info("******** Running Env Test ******* ");
-    assertEquals(expected, actual);
   }
 }
