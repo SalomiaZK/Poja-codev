@@ -90,15 +90,18 @@ jobs:
         run: |
           branch_name="${{ github.event.pull_request.base.ref || github.ref_name }}"
           
-          if [ "$branch_name" = "prod" ]; then
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY_PROD }}" >> $GITHUB_ENV
-            echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
-          elif [ "$branch_name" = "preprod" ]; then
-            echo "SECRET_KEY=${{ secrets.SECRET_KEY_PREPROD }}" >> $GITHUB_ENV
-            echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
-          else
-            echo "SECRET_KEY=undefined" >> $GITHUB_ENV
-          fi
+            if [ "$branch_name" = "prod" ]; then
+            export SECRET_KEY="${{ secrets.SECRET_KEY_PROD }}"
+            echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
+          echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
+            elif [ "$branch_name" = "preprod" ]; then
+            export SECRET_KEY="${{ secrets.SECRET_KEY_PREPROD }}"
+            echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
+          echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
+            else
+            export SECRET_KEY="undefined"
+            echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
+            fi
 
 
       - name: Build project
