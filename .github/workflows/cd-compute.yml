@@ -27,12 +27,12 @@ jobs:
       contents: write
     env:
       AWS_REGION: eu-west-3
-      SECRET_KEY: ${{
-        github.event_name == 'pull_request' && github.base_ref == 'prod' && secrets.SECRET_KEY_PROD ||
-        github.event_name == 'pull_request' && github.base_ref == 'preprod' && secrets.SECRET_KEY_PREPROD ||
-        github.ref_name == 'prod' && secrets.SECRET_KEY_PROD ||
-        github.ref_name == 'preprod' && secrets.SECRET_KEY_PREPROD ||
-        secrets.SECRET_KEY_PREPROD
+      SECRET_KEY: ${{ 
+          github.event_name == 'pull_request' && github.base_ref == 'prod' && secrets.SECRET_KEY_PROD ||
+          github.event_name == 'pull_request' && github.base_ref == 'preprod' && secrets.SECRET_KEY_PREPROD ||
+          github.ref_name == 'prod' && secrets.SECRET_KEY_PROD ||
+          github.ref_name == 'preprod' && secrets.SECRET_KEY_PREPROD ||
+          secrets.SECRET_KEY_PREPROD 
         }}
 
 
@@ -104,7 +104,7 @@ jobs:
           zip -r9 ${{ env.to_upload_filename }} .aws-sam
           shopt -u globstar
           curl --fail -X PUT -H "Content-Type: application/zip" -H "x-amz-tagging: temporary=true" -T ${{ env.to_upload_filename }} "${{ env.upload_build_file_uri }}"
-
+ 
       - name: Get current time
         uses: gerred/actions/current-time@master
         id: current-time
