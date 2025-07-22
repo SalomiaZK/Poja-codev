@@ -89,6 +89,22 @@ jobs:
           curl --fail -X GET -o template.yml "$(echo $response | jq -r '.build_template_file_uri')"
 
       # run a gradle test with a secret key
+      - name: Définir la bonne SECRET_KEY selon branche cible/source
+        id: set-secret
+        run: |
+          branch_name="${{ github.event.pull_request.base.ref || github.ref_name }}"
+          
+          if [ "$branch_name" = "prod" ]; then
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY_PROD }}" >> $GITHUB_ENV
+            echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
+          elif [ "$branch_name" = "preprod" ]; then
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY_PREPROD }}" >> $GITHUB_ENV
+            echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
+          else
+            echo "SECRET_KEY=undefined" >> $GITHUB_ENV
+          fi
+
+
       - name: Build project
         run: |
           ./gradlew test -Dspring.application.json='{"SECRET_KEY":"'$SECRET_KEY'"}'

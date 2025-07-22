@@ -25,7 +25,6 @@ jobs:
       - name: Définir la bonne SECRET_KEY selon branche cible/source
         id: set-secret
         run: |
-          # Détermine la branche selon le contexte (pull_request ou push)
           branch_name="${{ github.event.pull_request.base.ref || github.ref_name }}"
           
           if [ "$branch_name" = "prod" ]; then
