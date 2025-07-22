@@ -36,10 +36,6 @@ configurations {
     }
 }
 
-application {
-    mainClass = 'com.hei.codev.PojaApplication'
-}
-
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     useJUnitPlatform()
