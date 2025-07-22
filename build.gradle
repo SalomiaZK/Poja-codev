@@ -25,7 +25,7 @@ repositories {
 }
 
 java {
-    group = 'com.hei.codev'
+    group = 'com.example.demo'
     sourceCompatibility = '21'
     targetCompatibility = '21'
 }
@@ -42,7 +42,6 @@ test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     useJUnitPlatform()
     finalizedBy jacocoTestCoverageVerification
-    systemProperties System.getProperties()
 }
 
 jacocoTestCoverageVerification {

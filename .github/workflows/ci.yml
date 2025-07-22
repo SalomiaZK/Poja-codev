@@ -9,36 +9,38 @@ on:
       - '*'
   workflow_dispatch:
 
+  workflow_call:
+
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     env:
-      SECRET_KEY: ${{ github.event_name == 'pull_request' && github_base_ref == 'prod' && secrets.SECRET_KEY_PROD ||
-                      github.event_name == 'pull_request' && github_base_ref =='preprod' && secrets.SECRET_KEY_PREPROD ||
-                      github.ref_name == 'prod' && secrets.SECRET_KEY_PROD ||
-                      github.ref_name == 'preprod' && secrets.SECRET_KEY_PREPROD ||
-                      secrets.secret.SECRET_KEY_PREPROD }}
-    steps:
-      - uses: actions/checkout@v4
+      AWS_REGION: eu-west-3
 
-      - uses: actions/setup-java@v4
+    steps:
+      - uses: actions/checkout@v4.1.6
+
+      - uses: actions/setup-java@v4.2.1
         with:
           java-version: '21'
           distribution: 'corretto'
-
       - run: chmod +x gradlew
       - run: chmod +x .shell/publish_gen_to_maven_local.sh
       - run: ./gradlew test
 
+      
+
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+    steps:
+      - uses: actions/checkout@v4.1.6
+      - uses: actions/setup-java@v4.2.1
         with:
           java-version: '21'
           distribution: 'corretto'
