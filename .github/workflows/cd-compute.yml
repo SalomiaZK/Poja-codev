@@ -96,7 +96,7 @@ jobs:
       - name: Build project
         run: |
           ./gradlew test -Dspring.application.json='{"SECRET_KEY":"'$SECRET_KEY'"}'
-          sam build
+          sam build --skip-prepare-infra
 
       - name: Prepare Poja deployment
         run: |
