@@ -27,7 +27,11 @@ jobs:
       contents: write
     env:
       AWS_REGION: eu-west-3
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      SECRET_KEY: ${{ github.event_name == 'pull_request' && github_base_ref == 'prod' && secrets.SECRET_KEY_PROD ||
+        github.event_name == 'pull_request' && github_base_ref =='preprod' && secrets.SECRET_KEY_PREPROD ||
+        github.ref_name == 'prod' && secrets.SECRET_KEY_PROD ||
+        github.ref_name == 'preprod' && secrets.SECRET_KEY_PREPROD ||
+        secrets.SECRET_KEY_PREPROD }}
 
     steps:
       - uses: actions/checkout@v4.1.6
@@ -84,24 +88,6 @@ jobs:
           echo "to_upload_filename=$(echo $response | jq -r '.filename')" >> $GITHUB_ENV
           curl --fail -X GET -o template.yml "$(echo $response | jq -r '.build_template_file_uri')"
 
-      # run a gradle test with a secret key
-      - name: Définir la bonne SECRET_KEY selon branche cible/source
-        id: set-secret
-        run: |
-          branch_name="${{ github.event.pull_request.base.ref || github.ref_name }}"
-          
-            if [ "$branch_name" = "prod" ]; then
-            export SECRET_KEY="${{ secrets.SECRET_KEY_PROD }}"
-            echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
-          echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
-            elif [ "$branch_name" = "preprod" ]; then
-            export SECRET_KEY="${{ secrets.SECRET_KEY_PREPROD }}"
-            echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
-          echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
-            else
-            export SECRET_KEY="undefined"
-            echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
-            fi
 
 
       - name: Build project

@@ -19,7 +19,7 @@ jobs:
                       github.event_name == 'pull_request' && github_base_ref =='preprod' && secrets.SECRET_KEY_PREPROD ||
                       github.ref_name == 'prod' && secrets.SECRET_KEY_PROD ||
                       github.ref_name == 'preprod' && secrets.SECRET_KEY_PREPROD ||
-                      secrets.secret.SECRET_KEY_PREPROD }}
+                      secrets.SECRET_KEY_PREPROD }}
     steps:
       - uses: actions/checkout@v4
 
