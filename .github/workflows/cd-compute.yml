@@ -92,7 +92,7 @@ jobs:
           curl --fail -X GET -o template.yml "$(echo $response | jq -r '.build_template_file_uri')"
 
 
-       # build   
+         
       - name: Build project
         run: |
           ./gradlew test -Dspring.application.json='{"SECRET_KEY":"'$SECRET_KEY'"}'
