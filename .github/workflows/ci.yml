@@ -9,43 +9,47 @@ on:
       - '*'
   workflow_dispatch:
 
-  workflow_call:
-
-
-
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    environment: ${{ github.event_name == 'pull_request' && github.base_ref == 'prod' && 'prod' 
-                  || github.event_name=='pull_request' && github.base_ref == 'preprod' && 'preprod'
-                  || github.ref == 'refs/heads/prod' && 'prod'
-                  || github.ref == 'refs/heads/preprod' && 'preprod'}}
-    env:
-      AWS_REGION: eu-west-3
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
-      - uses: actions/checkout@v4.1.6
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4.2.1
+      - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'corretto'
+
+      - name: Définir la bonne SECRET_KEY selon branche cible/source
+        id: set-secret
+        run: |
+          # Détermine la branche selon le contexte (pull_request ou push)
+          branch_name="${{ github.event.pull_request.base.ref || github.ref_name }}"
+          
+          if [ "$branch_name" = "prod" ]; then
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY_PROD }}" >> $GITHUB_ENV
+            echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
+          elif [ "$branch_name" = "preprod" ]; then
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY_PREPROD }}" >> $GITHUB_ENV
+            echo "Longueur SECRET_KEY: ${#SECRET_KEY}"
+          else
+            echo "SECRET_KEY=undefined" >> $GITHUB_ENV
+          fi
+
       - run: chmod +x gradlew
       - run: chmod +x .shell/publish_gen_to_maven_local.sh
       - run: ./gradlew test
-
-
-
 
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4.1.6
-      - uses: actions/setup-java@v4.2.1
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'corretto'
