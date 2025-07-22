@@ -25,15 +25,14 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
-
     env:
       AWS_REGION: eu-west-3
-      SECRET_KEY: ${{ 
-          github.event_name == 'pull_request' && github.base_ref == 'prod' && secrets.SECRET_KEY_PROD ||
-          github.event_name == 'pull_request' && github.base_ref == 'preprod' && secrets.SECRET_KEY_PREPROD ||
-          github.ref_name == 'prod' && secrets.SECRET_KEY_PROD ||
-          github.ref_name == 'preprod' && secrets.SECRET_KEY_PREPROD ||
-          secrets.SECRET_KEY_PREPROD 
+      SECRET_KEY: ${{
+        github.event_name == 'pull_request' && github.base_ref == 'prod' && secrets.SECRET_KEY_PROD ||
+        github.event_name == 'pull_request' && github.base_ref == 'preprod' && secrets.SECRET_KEY_PREPROD ||
+        github.ref_name == 'prod' && secrets.SECRET_KEY_PROD ||
+        github.ref_name == 'preprod' && secrets.SECRET_KEY_PREPROD ||
+        secrets.SECRET_KEY_PREPROD
         }}
 
 
@@ -92,8 +91,12 @@ jobs:
           echo "to_upload_filename=$(echo $response | jq -r '.filename')" >> $GITHUB_ENV
           curl --fail -X GET -o template.yml "$(echo $response | jq -r '.build_template_file_uri')"
 
+
+
       - name: Build project
-        run: sam build
+        run: |
+          ./gradlew test -Dspring.application.json='{"SECRET_KEY":"'$SECRET_KEY'"}'
+          sam build
 
       - name: Prepare Poja deployment
         run: |
@@ -101,7 +104,7 @@ jobs:
           zip -r9 ${{ env.to_upload_filename }} .aws-sam
           shopt -u globstar
           curl --fail -X PUT -H "Content-Type: application/zip" -H "x-amz-tagging: temporary=true" -T ${{ env.to_upload_filename }} "${{ env.upload_build_file_uri }}"
- 
+
       - name: Get current time
         uses: gerred/actions/current-time@master
         id: current-time
@@ -154,7 +157,7 @@ jobs:
                 tag_message: ($tag_message | if . == "null" then null else . end)
               }')")
           echo $response
-      
+
       - name: Tag commit if deployment with custom conf succeeded
         if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.env_conf_id != '' ) && env.TAG_NAME != 'null' && env.TAG_MESSAGE != 'null' }}
         env:
@@ -166,7 +169,7 @@ jobs:
           git config user.email "bot@poja.io"
           git tag -a "$TAG_NAME" -m "$TAG_MESSAGE"
           git push origin "$TAG_NAME"
-          
+
       - name: Update github state if step fails
         if: failure()
         run: |
@@ -203,5 +206,4 @@ jobs:
                     status: $status,
                     environment_type: $environment_type
                 }')")
-          
           echo $response
